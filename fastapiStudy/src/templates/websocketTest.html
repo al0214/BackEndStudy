@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>WebSocket Test</title>
+    </head>
+    <body>
+        <h1>WebSocket Test Page</h1>
+
+        <!-- 연결 및 해제 버튼 -->
+        <button id="connect">Connect</button>
+        <button id="disconnect" disabled>Disconnect</button>
+
+        <!-- 사용자로부터 메시지를 입력받는 필드 -->
+        <p>Enter your message: <input type="text" id="userMessage"></p>
+        <button id="sendMessage">Send Message</button>
+
+        <!-- 현재 연결 상태와 메시지 로그를 표시 -->
+        <p>Status: <span id="status">Disconnected</span></p>
+        <div id="messages"></div>
+
+        <script>
+            // 웹소켓 객체를 저장할 변수를 선언합니다.
+            let websocket;
+
+            // DOM 엘리먼트에 대한 참조를 가져옵니다.
+            const statusElement = document.getElementById("status");
+            const messagesElement = document.getElementById("messages");
+            const userMessageElement = document.getElementById("userMessage");
+
+            // 'Connect' 버튼에 클릭 이벤트 리스너를 추가합니다.
+            document.getElementById("connect").addEventListener("click", () => {
+                // 웹소켓 인스턴스를 생성하고, 서버의 웹소켓 끝점에 연결합니다.
+                websocket = new WebSocket("http://127.0.0.1:8000/ws");
+
+                // 웹소켓 연결이 성공적으로 열렸을 때 호출됩니다.
+                websocket.onopen = (event) => {
+                    statusElement.innerText = "Connected"; // 상태를 'Connected'로 업데이트합니다.
+                    document.getElementById("connect").disabled = true; // 연결 버튼을 비활성화합니다.
+                    document.getElementById("disconnect").disabled = false; // 해제 버튼을 활성화합니다.
+                };
+
+                // 서버로부터 메시지를 받았을 때 호출됩니다.
+                websocket.onmessage = (event) => {
+                    // 메시지 로그에 새로운 메시지를 추가합니다.
+                    const newMessage = document.createElement("p");
+                    newMessage.innerText = `Received: ${event.data}`;
+                    messagesElement.appendChild(newMessage);
+                };
+
+                // 웹소켓 연결이 닫혔을 때 호출됩니다.
+                websocket.onclose = (event) => {
+                    statusElement.innerText = "Disconnected"; // 상태를 'Disconnected'로 업데이트합니다.
+                    document.getElementById("connect").disabled = false; // 연결 버튼을 활성화합니다.
+                    document.getElementById("disconnect").disabled = true; // 해제 버튼을 비활성화합니다.
+                };
+            });
+
+            // 'Disconnect' 버튼에 클릭 이벤트 리스너를 추가합니다.
+            document.getElementById("disconnect").addEventListener("click", () => {
+                // 웹소켓 연결을 닫습니다.
+                websocket.close();
+            });
+
+            // 'Send Message' 버튼에 클릭 이벤트 리스너를 추가합니다.
+            document.getElementById("sendMessage").addEventListener("click", () => {
+                // 입력 필드에서 메시지를 가져옵니다.
+                const message = userMessageElement.value;
+                // 웹소켓을 통해 메시지를 서버로 전송합니다.
+                websocket.send(message);
+
+                // 메시지 로그에 전송한 메시지를 추가합니다.
+                const sentMessage = document.createElement("p");
+                sentMessage.innerText = `Sent: ${message}`;
+                messagesElement.appendChild(sentMessage);
+            });
+        </script>
+    </body>
+</html>
