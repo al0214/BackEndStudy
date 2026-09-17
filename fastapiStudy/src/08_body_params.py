@@ -24,6 +24,5 @@ def create_advanced_item(
         )):
     return {"item": item}
 
-
 if __name__ == "__main__":
-    uvicorn.run("main09:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("08_body_params:app", host="0.0.0.0", port=8000, reload=True)

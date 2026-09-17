@@ -21,4 +21,4 @@ def create_item(item: Item):
     }
 
 if __name__ == "__main__":
-    uvicorn.run("main04:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("03_nested_models:app", host="0.0.0.0", port=8000, reload=True)

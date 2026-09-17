@@ -16,4 +16,4 @@ def create_item(item: GenericItem[int]):
     return {"item": item.model_dump()}
 
 if __name__ == "__main__":
-    uvicorn.run("main05:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("04_generic_models:app", host="0.0.0.0", port=8000, reload=True)

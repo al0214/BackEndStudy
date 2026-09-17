@@ -20,4 +20,4 @@ def read_info(info: str = Query(None, description="정보를 입력해 주세요
     }
 
 if __name__ == "__main__":
-    uvicorn.run("main08:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("07_query_params:app", host="0.0.0.0", port=8000, reload=True)
